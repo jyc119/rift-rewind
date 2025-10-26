@@ -78,7 +78,13 @@ def save_to_s3(data):
         Bucket=BUCKET,
         Key=key,
         Body=json.dumps(data, indent=2),
-        ContentType="application/json"
+        ContentType="application/json",
+        Metadata={
+            "phase": "processed",
+            "player": SUMMONER_NAME,
+            "type": "summary"
+        },
+        Tagging="rift-rewind-hackathon=2025"
     )
     print(f"✅ Saved summary to s3://{BUCKET}/{key}")
 
