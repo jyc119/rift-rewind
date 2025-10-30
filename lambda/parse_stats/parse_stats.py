@@ -75,6 +75,7 @@ def build_role_summary(roleToData):
             deaths = m.get("deaths", 0)
             assists = m.get("assists", 0)
             vision = m.get("visionScore", 0)
+            champion = m.get("championName", "NA")
 
             # Compute KDA safely
             kda = round((kills + assists) / max(1, deaths), 2)
@@ -84,7 +85,8 @@ def build_role_summary(roleToData):
                 "deaths": deaths,
                 "kda": kda,
                 "assists": assists,
-                "visionScore": vision
+                "visionScore": vision,
+                "championName": champion
             })
 
         roleSummary[role] = {
