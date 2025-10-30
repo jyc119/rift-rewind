@@ -18,7 +18,8 @@ s3 = boto3.client("s3")
 
 def save_data_to_s3(match_id, match_data):
     player_name = GAME_NAME+TAG_LINE
-    key = f"raw/{player_name}/{match_id}.json"
+    # key = f"raw/{player_name}/{match_id}.json"
+    key = f"match/{player_name}/{match_id}.json"
     s3.put_object(
         Bucket=S3_BUCKET,
         Key=key,
@@ -30,7 +31,7 @@ def save_data_to_s3(match_id, match_data):
 
 def main():
     puuid = "HdWsPi1r1hpcj_yBMpwelFAOrkO2UteG3JT5PpTyaaiUmdqo_2mUO0k84wMhMBdIhEXcYvntrNyMtw"
-    matches_url = f"https://{REGION_GROUP}.api.riotgames.com/lol/match/v5/matches/by-puuid/{puuid}/ids?start=0&count=5"
+    matches_url = f"https://{REGION_GROUP}.api.riotgames.com/lol/match/v5/matches/by-puuid/{puuid}/ids?start=0&count=30"
     matches_response = requests.get(matches_url, headers=HEADERS)
 
     if matches_response.status_code != 200:
