@@ -1,18 +1,53 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { validatePlayer } from "../utils/api";
 import mapBg from "../assets/homepage.webp";
 
 const Home = () => {
   const [summonerName, setSummonerName] = useState("");
   const [tag, setTag] = useState("");
+
+  const [error, setError] = useState<string | null>(null);
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  
   const navigate = useNavigate();
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (summonerName && tag) {
-      navigate(`/player/${summonerName}-${tag}`);
+
+    setError(null);
+
+    const gameName = summonerName.trim();
+    const tagLine = tag.trim();
+
+    if (!gameName || !tagLine) {
+      setError("Please enter both Summoner Name and Tag.");
+      return;
     }
-  };
+
+    try {
+      setIsSubmitting(true);
+
+      // ✅ call AWS API to validate
+      const data = await validatePlayer(gameName, tagLine);
+
+      // (optional) if backend returns canonical casing, use it:
+      const finalGameName = (data.gameName ?? gameName).trim();
+      const finalTagLine = (data.tagLine ?? tagLine).trim();
+
+      // ✅ navigate only on success
+      navigate(
+        `/player/${encodeURIComponent(finalGameName)}-${encodeURIComponent(finalTagLine)}`
+      );
+    } catch (err) {
+      // ❌ show error line under form
+      const msg =
+        err instanceof Error ? err.message : "Validation failed. Please try again.";
+      setError(msg);
+    } finally {
+      setIsSubmitting(false);
+      }
+  }
 
   return (
     <div className="relative flex items-center justify-center min-h-screen bg-black overflow-hidden">
