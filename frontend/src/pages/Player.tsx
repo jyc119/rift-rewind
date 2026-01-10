@@ -12,7 +12,7 @@ const Player: React.FC = () => {
   const { id } = useParams(); // 👈 capture the parameter from the URL (/player/:id)
 
   // Split "Monster-NA1" into "Monster" and "NA1"
-  const [summonerName, tag] = id ? id.split("-") : ["Unknown", ""];
+  const [summonerName, tag, region] = id ? id.split("-") : ["Unknown", ""];
 
   console.log("Raw id from URL:", id);
   console.log("Summoner Name:", summonerName);

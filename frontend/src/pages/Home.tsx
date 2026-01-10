@@ -6,6 +6,7 @@ import mapBg from "../assets/homepage.webp";
 const Home = () => {
   const [summonerName, setSummonerName] = useState("");
   const [tag, setTag] = useState("");
+  const [region, setRegion] = useState("")
 
   const [error, setError] = useState<string | null>(null);
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -83,10 +84,17 @@ const Home = () => {
         />
           <button
             type="submit"
+            disabled={isSubmitting}
             className="px-6 py-2 bg-blue-600 hover:bg-blue-700 text-white font-semibold rounded-lg shadow-md transition"
           >
-            Search
+            {isSubmitting ? "Checking..." : "Search"}
           </button>
+
+          {error && (
+            <p className="text-sm text-red-400">
+              {error}
+            </p>
+          )}
         </form>
       </div>
     </div>
