@@ -1,5 +1,5 @@
-import React, { useState } from "react";
-import { useParams } from "react-router-dom";
+import React, { useEffect, useState } from "react";
+import { useLocation, useParams, Navigate } from "react-router-dom";
 import mapBg from "../assets/map-bg.jpg";
 import topIcon from "../assets/roles/Top.png";
 import jgIcon from "../assets/roles/Jungle.png";
@@ -7,16 +7,44 @@ import midIcon from "../assets/roles/Middle.png";
 import botIcon from "../assets/roles/Bot.png";
 import supIcon from "../assets/roles/Support.png";
 
+import { getOverview, type OverviewResponse } from "../utils/api";
+
+type PlayerNavState = {
+  puuid: string;
+}
+
 const Player: React.FC = () => {
   const [hoveredRole, setHoveredRole] = useState<string | null>(null);
-  const { id } = useParams(); // 👈 capture the parameter from the URL (/player/:id)
+  const [error, setError] = useState<string | null>(null);
+  const [data, setData] = useState<OverviewResponse | null>(null)
 
   // Split "Monster-NA1" into "Monster" and "NA1"
-  const [summonerName, tag, region] = id ? id.split("-") : ["Unknown", ""];
+  const { region, id } = useParams<{ region: string; id: string }>();
+  const [summonerName, tag] = id ? id.split("-") : ["Unknown", ""];
+  const {state} = useLocation() as {state: PlayerNavState | null};
 
-  console.log("Raw id from URL:", id);
-  console.log("Summoner Name:", summonerName);
-  console.log("Tag:", tag);
+  if (!state?.puuid){
+    return <Navigate to="/" replace />
+  }
+
+  useEffect(() => {
+    const fetchOverview = async () => {
+      try {
+        setError(null);
+
+        const rankData = await getOverview(summonerName, tag, region, state.puuid);
+
+        setData(rankData); // ✅ types now match
+      } catch (err) {
+        setError(err instanceof Error ? err.message : "Failed to load player data");
+      }
+    };
+
+    // ✅ actually call it
+    fetchOverview();
+
+    return () => {};
+  }, [summonerName, tag]);
 
   const roleInfo: Record<string, string> = {
     top: "Top Lane — Durable champions who thrive in 1v1s and split-pushing.",

@@ -1,4 +1,4 @@
-type Rank =
+export type Rank =
   | {
       queue: string;
       tier: string;
@@ -11,8 +11,6 @@ type Rank =
 
 export type OverviewResponse = {
   valid: boolean;
-  gameName: string;
-  tagLine: string;
   rank: Rank;
   message?: string | null;
 };
@@ -33,17 +31,17 @@ export async function validatePlayer(gameName: string, tagLine: string) {
     throw new Error(data.message || `Request failed (${res.status})`);
   }
 
-  return data as { puuid?: string; gameName?: string; tagLine?: string; [k: string]: any };
+  return data as { puuid?: string; gameName?: string; tagLine?: string; region?: string; [k: string]: any };
 }
 
-export async function getOverview(gameName: string, tagLine: string): Promise<OverviewResponse> {
-  const res = await fetch(`${import.meta.env.VITE_API_BASE_URL}/overview`, {
+export async function getOverview(gameName: string, tagLine: string, region:string | undefined, puuid: string): Promise<OverviewResponse> {
+  const res = await fetch(`${import.meta.env.VITE_API_OVERVIEW}/overview`, {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
       "x-api-key": import.meta.env.VITE_API_KEY as string,
     },
-    body: JSON.stringify({ gameName, tagLine }),
+    body: JSON.stringify({ gameName, tagLine, region, puuid}),
   });
 
   const data: OverviewResponse = await res.json().catch(() => ({} as any));

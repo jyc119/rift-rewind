@@ -6,7 +6,7 @@ import mapBg from "../assets/homepage.webp";
 const Home = () => {
   const [summonerName, setSummonerName] = useState("");
   const [tag, setTag] = useState("");
-  const [region, setRegion] = useState("")
+  const [region, setRegion] = useState("na1")
 
   const [error, setError] = useState<string | null>(null);
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -37,9 +37,11 @@ const Home = () => {
       const finalTagLine = (data.tagLine ?? tagLine).trim();
 
       // ✅ navigate only on success
-      navigate(
-        `/player/${encodeURIComponent(finalGameName)}-${encodeURIComponent(finalTagLine)}`
-      );
+      navigate(`/player/${encodeURIComponent(region.trim())}/${encodeURIComponent(finalGameName.trim())}-${encodeURIComponent(finalTagLine.trim())}`, {
+        state:{
+          puuid: data.puuid,
+        }
+      });
     } catch (err) {
       // ❌ show error line under form
       const msg =
@@ -82,6 +84,17 @@ const Home = () => {
             onChange={(e) => setTag(e.target.value)}
             className="px-6 py-3 w-48 bg-gray-900/80 border border-gray-600 text-white text-lg rounded-lg focus:ring-2 focus:ring-blue-500 focus:outline-none"
         />
+
+        <select
+          value={region}
+          onChange={(e) => setRegion(e.target.value)}
+          className="px-4 py-3 w-24 bg-gray-900/80 border border-gray-600 text-white text-lg rounded-lg focus:ring-2 focus:ring-blue-500 focus:outline-none"
+        >
+          <option value="na1">NA</option>
+          <option value="eu1">EU</option>
+          <option value="sg2">SG</option>
+        </select>
+
           <button
             type="submit"
             disabled={isSubmitting}

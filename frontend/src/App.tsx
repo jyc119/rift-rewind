@@ -10,7 +10,7 @@ function App() {
         <Route path="/" element={<HomePage />} />
 
         {/* Dynamic route — player profile */}
-        <Route path="/player/:id" element={<PlayerPage />} />
+        <Route path="/player/:region/:id" element={<PlayerPage />} />
       </Routes>
     </BrowserRouter>
   );

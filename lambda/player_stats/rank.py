@@ -23,24 +23,28 @@ def lambda_handler(event, context):
         body = json.loads(event.get("body", "{}"))
         game_name = body.get("gameName")
         tag_line = body.get("tagLine")
+        region = body.get("region")
+        puuid = body.get("puuid")
 
-        if not game_name or not tag_line:
+        print(region)
+
+        if not region or not game_name or not tag_line or not puuid:
             return response(400, {"message": "Missing gameName or tagLine"})
 
         # 1️⃣ Riot ID → PUUID
-        account_url = (
-            f"https://{DEFAULT_REGION}.api.riotgames.com"
-            f"/riot/account/v1/accounts/by-riot-id/{game_name}/{tag_line}"
-        )
+        # account_url = (
+        #     f"https://{DEFAULT_REGION}.api.riotgames.com"
+        #     f"/riot/account/v1/accounts/by-riot-id/{game_name}/{tag_line}"
+        # )
 
-        acc_res = requests.get(account_url, headers=HEADERS)
-        if acc_res.status_code != 200:
-            return response(acc_res.status_code, {
-                "message": "Riot ID not found"
-            })
+        # acc_res = requests.get(account_url, headers=HEADERS)
+        # if acc_res.status_code != 200:
+        #     return response(acc_res.status_code, {
+        #         "message": "Riot ID not found"
+        #     })
 
-        account = acc_res.json()
-        puuid = account["puuid"]
+        # account = acc_res.json()
+        # puuid = account["puuid"]
 
         # 2️⃣ PUUID → Summoner ID (regional endpoint)
         # summoner_url = (
@@ -59,7 +63,7 @@ def lambda_handler(event, context):
 
         # 3️⃣ Summoner ID → Rank entries
         rank_url = (
-            f"https://na1.api.riotgames.com"
+            f"https://{region}.api.riotgames.com"
             f"/lol/league/v4/entries/by-puuid/{puuid}"
         )
 
