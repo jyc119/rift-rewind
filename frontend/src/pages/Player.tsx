@@ -1,11 +1,10 @@
 import React, { useEffect, useState } from "react";
 import { useLocation, useParams, Navigate } from "react-router-dom";
+
 import mapBg from "../assets/map-bg.jpg";
-import topIcon from "../assets/roles/Top.png";
-import jgIcon from "../assets/roles/Jungle.png";
-import midIcon from "../assets/roles/Middle.png";
-import botIcon from "../assets/roles/Bot.png";
-import supIcon from "../assets/roles/Support.png";
+import { roleIconMap } from "../utils/rankRoleIcon";
+import { rankIconMap } from "../utils/rankRoleIcon";
+
 
 import { getOverview, type OverviewResponse } from "../utils/api";
 
@@ -54,13 +53,19 @@ const Player: React.FC = () => {
     support: "Support — Protects and enables the team with vision and utility.",
   };
 
+  const tier = data?.rank?.tier;          // e.g. "PLATINUM"
+  const division = data?.rank?.rank;      // e.g. "I"
+  const lp = data?.rank?.lp;              // e.g. 85
+
+  const icon = tier ? rankIconMap[tier] : undefined;
+
   return (
     <div className="flex flex-col items-center min-h-screen bg-gray-900 text-white">
       {/* --- Top Section: Player Info --- */}
       <div className="w-full max-w-3xl mt-10 mb-6 text-center">
         <h1 className="text-3xl font-bold">{summonerName} #{tag}</h1>
         <img
-          src="https://opgg-static.akamaized.net/images/medals/platinum_1.png"
+          src={icon}
           alt="Rank"
           className="mx-auto w-24 h-24 mt-4"
         />
@@ -78,7 +83,7 @@ const Player: React.FC = () => {
         {/* Role icons positioned manually (can later adjust absolute positions) */}
         <div className="absolute top-[25%] left-[25%]">
           <img
-            src={topIcon}
+            src={roleIconMap["TOP"]}
             alt="Top"
             className="w-12 h-12 cursor-pointer transition-transform hover:scale-110"
             onMouseEnter={() => setHoveredRole("top")}
@@ -88,7 +93,7 @@ const Player: React.FC = () => {
 
         <div className="absolute top-[40%] left-[30%]">
           <img
-            src={jgIcon}
+            src={roleIconMap["JUNGLE"]}
             alt="Jungle"
             className="w-12 h-12 cursor-pointer transition-transform hover:scale-110"
             onMouseEnter={() => setHoveredRole("jungle")}
@@ -98,7 +103,7 @@ const Player: React.FC = () => {
 
         <div className="absolute top-[50%] left-[45%]">
           <img
-            src={midIcon}
+            src={roleIconMap["MID"]}
             alt="Mid"
             className="w-12 h-12 cursor-pointer transition-transform hover:scale-110"
             onMouseEnter={() => setHoveredRole("mid")}
@@ -106,9 +111,9 @@ const Player: React.FC = () => {
           />
         </div>
 
-        <div className="absolute bottom-[20%] left-[80%]">
+        <div className="absolute bottom-[20%] left-[75%]">
           <img
-            src={botIcon}
+            src={roleIconMap["BOT"]}
             alt="ADC"
             className="w-12 h-12 cursor-pointer transition-transform hover:scale-110"
             onMouseEnter={() => setHoveredRole("adc")}
@@ -116,9 +121,9 @@ const Player: React.FC = () => {
           />
         </div>
 
-        <div className="absolute bottom-[20%] left-[75%]">
+        <div className="absolute bottom-[20%] left-[80%]">
           <img
-            src={supIcon}
+            src={roleIconMap["SUPPORT"]}
             alt="Support"
             className="w-12 h-12 cursor-pointer transition-transform hover:scale-110"
             onMouseEnter={() => setHoveredRole("support")}

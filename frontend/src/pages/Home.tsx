@@ -91,7 +91,7 @@ const Home = () => {
           className="px-4 py-3 w-24 bg-gray-900/80 border border-gray-600 text-white text-lg rounded-lg focus:ring-2 focus:ring-blue-500 focus:outline-none"
         >
           <option value="na1">NA</option>
-          <option value="eu1">EU</option>
+          <option value="euw1">EU</option>
           <option value="sg2">SG</option>
         </select>
 
