@@ -30,7 +30,7 @@ const Home = () => {
       setIsSubmitting(true);
 
       // ✅ call AWS API to validate
-      const data = await validatePlayer(gameName, tagLine);
+      const data = await validatePlayer(gameName, tagLine, region);
 
       // (optional) if backend returns canonical casing, use it:
       const finalGameName = (data.gameName ?? gameName).trim();

@@ -15,14 +15,14 @@ export type OverviewResponse = {
   message?: string | null;
 };
 
-export async function validatePlayer(gameName: string, tagLine: string) {
+export async function validatePlayer(gameName: string, tagLine: string, region: string) {
   const res = await fetch(`${import.meta.env.VITE_API_BASE_URL}/validate-player`, {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
       "x-api-key": import.meta.env.VITE_API_KEY as string,
     },
-    body: JSON.stringify({ gameName, tagLine }),
+    body: JSON.stringify({ gameName, tagLine, region }),
   });
 
   const data: any = await res.json().catch(() => ({}));
